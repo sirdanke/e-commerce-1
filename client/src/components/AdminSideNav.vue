@@ -42,30 +42,6 @@ export default {
     }
   },
   computed: {
-    // listNavs() {
-    //   if(this.isAdmin) {
-    //     return ['create', 'transaction']
-    //   }
-    //   return this.collections.map(a => { a.brand})
-
-    // },
-    // collections() {
-    //   if (this.collectionPage === "default") {
-    //     return this.allProducts;
-    //   } else if (this.collectionPage === "Pants") {
-    //     return this.allProducts.filter(a => {
-    //       return a.category === "Pants";
-    //     });
-    //   } else if (this.collectionPage === "Clothes") {
-    //     return this.allProducts.filter(a => {
-    //       return a.category === "Clothes";
-    //     });
-    //   } else if (this.collectionPage === "Shoes") {
-    //     return this.allProducts.filter(a => {
-    //       return a.category === "Shoes";
-    //     });
-    //   }
-    // },
     ...mapState(["allProducts", "collectionPage", "isAdmin"])
   }
 };

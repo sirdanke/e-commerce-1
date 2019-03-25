@@ -70,8 +70,6 @@ export default {
     if (this.id) {
       this.getProductToEdit();
     } else {
-      console.log("masuk sini gak ya");
-
       this.name = "";
       this.description = "";
       this.stock = "";
@@ -94,7 +92,6 @@ export default {
           headers: { access_token: localStorage.getItem("access_token") }
         })
         .then(({ data }) => {
-          console.log(data, "====");
           this.preview = data.image;
           this.name = data.name;
           this.description = data.description;
@@ -106,7 +103,6 @@ export default {
           this.category = data.category;
         })
         .catch(({ response }) => {
-          console.log(response);
         });
     },
     getImage(e) {

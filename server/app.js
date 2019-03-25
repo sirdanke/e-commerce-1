@@ -11,7 +11,9 @@ require('dotenv').config()
 const NODE_ENV = process.env.NODE_ENV
 const app = express();
 const mongoose = require('mongoose')
-mongoose.connect(`mongodb://localhost:27017/e-commerce${NODE_ENV}`)
+
+// mongodb+srv://ahmadSyukron:Syukron699!@clusteribenk-v2bjp.mongodb.net/test?retryWrites=true
+mongoose.connect("mongodb+srv://ahmadSyukron:Syukron699!@clusteribenk-v2bjp.mongodb.net/test?retryWrites=true")
 
 app.use(cors())
 app.use(express.json(

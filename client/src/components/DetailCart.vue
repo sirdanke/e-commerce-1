@@ -104,10 +104,10 @@ export default {
         )
         .then(({ data }) => {
           this.userCart = data.cart;
-          console.log(data);
+     
         })
         .catch(({ response }) => {
-          console.log(response);
+     
         });
     },
     fecthCart() {
@@ -131,7 +131,7 @@ export default {
         })
         .then(({ data }) => {
           this.activeTransaction = data;
-          console.log(data);
+       
         })
         .catch(({ response }) => {
           console.log(response);
@@ -155,8 +155,6 @@ export default {
         .then(({ data }) => {
           this.userCart = [];
           this.fetchTransaction()
-          // this.$store.dispatch('')
-          // console.log(data);
         })
         .catch(({ response }) => {
           console.log(response);
@@ -175,8 +173,6 @@ export default {
         )
         .then(({ data }) => {
           this.fetchTransaction();
-          // this.$store.dispatch()
-          // console.log(data);
         })
         .catch(({ response }) => {
           console.log(response);
