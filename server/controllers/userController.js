@@ -69,9 +69,13 @@ module.exports = {
                     .populate({path : 'cart.product'})
             })
             .then(data => {
+                console.log(data.cart);
+                
                 res.status(200).json({ cart: data.cart })
             })
             .catch(err => {
+                console.log(err, "======");
+                
                 res.status(500).json(err)
             })
     },

@@ -9,6 +9,9 @@ const transactionRouter = require('./routes/transaction')
 require('dotenv').config()
 
 const NODE_ENV = process.env.NODE_ENV
+
+console.log(NODE_ENV, "====INI NODE ENV");
+
 const app = express();
 const mongoose = require('mongoose')
 

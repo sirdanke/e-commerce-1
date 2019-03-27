@@ -1,6 +1,7 @@
 const User = require('../models/users')
 
 function cekProductInsideCart(req,res, next) {
+    
     User
         .findById(req.userId)
         .then(user => {

@@ -6,8 +6,12 @@ const app = require('../app')
 const User = require('../models/users')
 chai.use(chaiHttp)
 const fs = require('fs')
-let access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBjZDI5YzJmZDIwNjE2OTBlNDJjZSIsInJvbGUiOiJhZG1pbiJ9._fQlCrDXvpHwCY8kC6ojJPZg21mVvszOVY5rWxi5XbM'
+let access_token = ''
 const Products = require('../models/product')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+let product = ''
+let transaction = ''
 
 before(function (done) {
     Products
@@ -20,20 +24,43 @@ before(function (done) {
         })
 })
 
-after(function (done) {
-    Products
-        .remove({})
-        .then(() => {
+before(function(done) {
+    User
+        .create({
+            name : 'admin',
+            email : 'admin@admin.com',
+            password : 'aA@123'
+        })
+        .then(user => {
+            console.log(user);
+            
+            access_token = jwt.sign({
+                    id: user._id,
+                    role: user.role
+                },'RAHASIANEGARA')
+            
             done()
         })
         .catch(err => {
-            console.log(err)
+            console.log(err);
+            
         })
 })
 
+// after(function (done) {
+//     Products
+//         .remove({})
+//         .then(() => {
+//             done()
+//         })
+//         .catch(err => {
+//             console.log(err)
+//         })
+// })
 
 
-describe('POST/products, testing for product endpoint', function () {
+
+describe('testing products, testing for product endpoint', function () {
     describe('it should return status 200 with success create oproduct', function () {
         // it('should return status 200 with value object', function (done) {
 
@@ -49,6 +76,44 @@ describe('POST/products, testing for product endpoint', function () {
         //             done()
         //         })
         // })
+
+
+        it('should return status 201 with value object new product', function (done) {
+            chai
+                .request(app)
+                .post('/products')
+                .set('access_token', access_token)
+                .send({
+                    data: {
+                        name: 'sepatu nike',
+                        description: 'ya sepatu',
+                        price: 1,
+                        stock: 3,
+                        image: 'sepatu.jpg',
+                        category: 'Shoes',
+                        brand: 'nike'
+                    }
+                })
+                .end(function (err, response) {
+                    product = response.body
+
+                    response.should.have.status(201)
+                    response.body.should.be.an('object')
+                    response.body.should.have.property('name')
+                    response.body.should.have.property('description')
+                    response.body.should.have.property('price')
+                    response.body.should.have.property('stock')
+                    response.body.should.have.property('_id')
+                    response.body.should.have.property('image')
+                    response.body.should.have.property('category')
+                    response.body.should.have.property('brand')
+
+
+                    // response.body.should.have.property('error')
+                    // response.body.error.should.equal('path name required')
+                    done()
+                })
+        })
     })
     describe('POST/product with error status', function () {
 
@@ -65,7 +130,7 @@ describe('POST/products, testing for product endpoint', function () {
                         price: 1,
                         stock: 1,
                         image: ' aaa',
-                        category : 'Shoes'
+                        category: 'Shoes'
                     }
                 })
                 .end(function (err, response) {
@@ -181,8 +246,8 @@ describe('POST/products, testing for product endpoint', function () {
                         price: 1,
                         stock: 1,
                         image: 'file foto',
-                        brand : '',
-                        category : ''
+                        brand: '',
+                        category: ''
                     }
                 })
                 .set('access_token', access_token)
@@ -206,8 +271,8 @@ describe('POST/products, testing for product endpoint', function () {
                         price: 1,
                         stock: 1,
                         image: 'file foto',
-                        brand : 'nike',
-                        category : ''
+                        brand: 'nike',
+                        category: ''
                     }
                 })
                 .set('access_token', access_token)
@@ -220,5 +285,115 @@ describe('POST/products, testing for product endpoint', function () {
                 })
         })
     })
+
+    describe('GET/ product  get all product data ', function() {
+        describe('get/ product woith success value', function() {
+            it('should return an array of object for allproduct data', function(done) {
+                chai
+                    .request(app)
+                    .get('/products')
+                    .end(function(err, response) {
+                        response.should.have.status(200)
+                        response.body.should.be.an('array')
+                        response.body[0].should.have.property('name')
+                        done()
+                    })
+            })
+        })
+    })
+
+    describe('GET/ product/:id  get all product data ', function() {
+        describe('get/ product woith success value', function() {
+            it('should return an array of object for allproduct data', function(done) {
+                chai
+                    .request(app)
+                    .get(`/products/${product._id}`)
+                    .end(function(err, response) {
+                        response.should.have.status(200)
+                        response.body.should.be.an('object')
+                        response.body.should.have.property('name')
+                        done()
+                    })
+            })
+        })
+    })
+
+    describe('POST/user/cart, it should return array of object success cart', function () {
+        describe('it should return with status 200 with new cart data', function () {
+            it('should return with status 200 with new cart data', function (done) {
+                chai
+                    .request(app)
+                    .patch('/users/cart')
+                    .send({
+                        product: { product : product,
+                            quantity: '1' },
+                       
+                    })
+                    .set('access_token', access_token)
+                    .end(function (err, response) {
+                
+                        
+                        response.should.have.status(200)
+                        // response.body.should.be.an('object')
+                        // response.body.should.have.property('error')
+                        // response.body.error.should.equal('Choose one category')
+                        done()
+                    })
+            })
+        })
+    })
+
+  
+
+
+
+    describe('FOR ALL TRANSACTION ROUTES', function() {
+        it('should return status 200 for new transaction', function(done){
+            chai
+                .request(app)
+                .post('/transactions')
+                .set('access_token', access_token)
+                .send({
+                    product,
+                    grandTotal : 100000
+                })
+                .end(function(err, response) {
+                    transaction = response.body
+                    response.should.have.status(200)
+                    done()
+                })
+        })
+
+        it('should return status 200 for new updated shipping status', function(done){
+            chai
+                .request(app)
+                .patch(`/transactions/${transaction._id}`)
+                .set('access_token', access_token)
+                .send( {shipped : true})
+                .end(function(err, response) {
+                    response.should.have.status(200)
+                    done()
+                })
+        })
+    })
+
+
+    describe('DELETE/ product/:id  get all product data ', function() {
+        describe('get/ product woith success value', function() {
+            it('should return an array of object for allproduct data', function(done) {
+                chai
+                    .request(app)
+                    .delete(`/products/${product._id}`)
+                    .set('access_token', access_token)
+                    .end(function(err, response) {
+                        response.should.have.status(200)
+                        response.body.should.be.an('object')
+                        response.body.should.have.property('message')
+                        done()
+                    })
+            })
+        })
+    })
+
 
 })

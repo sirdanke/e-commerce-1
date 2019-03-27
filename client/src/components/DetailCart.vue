@@ -1,8 +1,8 @@
 <template>
   <v-flex xs12>
-    <v-container>
-      <v-layout class="ma-5">
-        <v-flex xs8 class="ma-5">
+    <v-container fluid>
+      <v-layout justify-center class="ma-5">
+        <v-flex xs8 offset-xs2 class="ma-5">
           <v-layout justify-center column fill-height>
             <div v-if="userCart.length > 0">
               <v-card
@@ -15,13 +15,21 @@
                   <v-btn flat dark>{{product.product.name}}</v-btn>
                 </v-card-actions>
                 <v-card-actions>
-                  <span>quantity : {{product.quantity}}</span><br>
-                  <span> price : Rp. {{((product.product.price * (100-product.product.promo))/100).toLocaleString()}}  </span>
-                  <span></span>
-                 
-                  <span>total : Rp. {{(((product.product.price * (100-product.product.promo))/100) * product.quantity).toLocaleString()}}</span>
-                
-                  <v-btn @click="cancelProduct(product.product._id, product.quantity)">cancel</v-btn>
+                  <v-layout>
+                    <v-flex>
+                      <span>quantity : {{product.quantity}}</span>
+                      <br>
+                    </v-flex>
+                    <v-flex>
+                      <span>price : Rp. {{((product.product.price * (100-product.product.promo))/100).toLocaleString()}}</span>
+                    </v-flex>
+                    <v-flex>
+                      <span>total : Rp. {{(((product.product.price * (100-product.product.promo))/100) * product.quantity).toLocaleString()}}</span>
+                    </v-flex>
+                    <v-flex>
+                      <v-btn @click="cancelProduct(product.product._id, product.quantity)">cancel</v-btn>
+                    </v-flex>
+                  </v-layout>
                 </v-card-actions>
               </v-card>
               <div>grandTotal :Rp. {{grandTotal.toLocaleString()}}</div>
@@ -30,23 +38,61 @@
               </div>
             </div>
             <div v-else>
-              <h1> you don't have active cart</h1>
+              <h1>you don't have active cart</h1>
             </div>
           </v-layout>
-        </v-flex>
-        <v-flex xs4>
-          <h1>your transaction list</h1>
-          <div v-for="order in activeTransaction" :key="order._id">
-            <v-card v-if="!order.received">
+          <v-layout justify-center  style="min-width:90%" >
+            <v-flex>
+            <v-layout>
+            <h3>TRANSACTION HISTORY</h3><br>
+            </v-layout>
+            <!-- {{activeTransaction}} -->
+            <v-data-table :headers="headers" :items="activeTransaction" class="elevation-1">
+              <template v-slot:items="props">
+                <td>{{ props.item._id }}</td>
+                <!-- <td class="text-xs-right">{{ props.item._id }}</td> -->
+                <td class="text-xs-right">{{ props.item.grandTotal }}</td>  
+                <td class="text-xs-right">
+                  <ol>
+                    <li
+                      v-for="(product,index) in props.item.transactions"
+                      :key="index"
+                    >{{ product.product.name }} ({{product.quantity}})</li>
+                  </ol>
+                </td>
+                <td class="text-xs-right">{{ new Date(props.item.updatedAt).toDateString() }}</td>
+                <!-- <td class="text-xs-right">{{ props.item.shipped }}</td> -->
+                <td class="justify-center layout px-0">
+                  <v-btn
+                    v-if="!props.item.received"
+                    @click.prevent="confirmTransaction(props.item._id)"
+                  >Received</v-btn>
+                  <!-- <i class="material-icons">done</i> -->
+                  <v-icon small class="mr-2" @click="editItem(props.item)" v-else>done</v-icon>
+                  <!-- <v-icon small @click="deleteItem(props.item)">delete</v-icon> -->
+                </td>
+            
+              </template>
+            </v-data-table>
+
+</v-flex>
+
+
+
+
+            <!-- <v-card v-if="!order.received" style="min-width:90%">
               <div>id : {{order._id}}</div>
               <div>status : {{getStatus(order.shipped)}}</div>
               <div>grandTotal : Rp. {{order.grandTotal.toLocaleString()}}</div>
               <v-card-actions>
-                <v-btn @click.prevent="confirmTransaction(order._id)">barang sudah sampai</v-btn>
+                <v-layout align-center justify-center row fill-height>
+                  <v-btn @click.prevent="confirmTransaction(order._id)">barang sudah sampai</v-btn>
+                </v-layout>
               </v-card-actions>
-            </v-card>
-          </div>
+            </v-card> -->
+          </v-layout>
         </v-flex>
+        
       </v-layout>
     </v-container>
   </v-flex>
@@ -58,6 +104,18 @@ import axios from "@/api/axios.js";
 export default {
   data() {
     return {
+       headers: [
+        {
+          text: "transaction id",
+          align: "left",
+          sortable: false,
+          value: "_id"
+        },
+        { text: "grand total", value: "grand total" },
+        { text: "product (quantity) ", value: "product" },
+        { text: "tanggal", value: "protein" },
+        { text : "received"}
+      ],
       data: "",
       userCart: [],
       activeTransaction: []
@@ -87,7 +145,7 @@ export default {
     getStatus(payload) {
       if (payload) {
         return "dalam proses pengiriman";
-        } else {
+      } else {
         return "dalam proses packing";
       }
     },
@@ -104,11 +162,8 @@ export default {
         )
         .then(({ data }) => {
           this.userCart = data.cart;
-     
         })
-        .catch(({ response }) => {
-     
-        });
+        .catch(({ response }) => {});
     },
     fecthCart() {
       axios
@@ -131,7 +186,6 @@ export default {
         })
         .then(({ data }) => {
           this.activeTransaction = data;
-       
         })
         .catch(({ response }) => {
           console.log(response);
@@ -154,7 +208,7 @@ export default {
         )
         .then(({ data }) => {
           this.userCart = [];
-          this.fetchTransaction()
+          this.fetchTransaction();
         })
         .catch(({ response }) => {
           console.log(response);

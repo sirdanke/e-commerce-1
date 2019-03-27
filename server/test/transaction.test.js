@@ -14,7 +14,7 @@ const Products = require('../models/product')
 
 
 
-describe.only('GET/transaction, testing for product endpoint', function () {
+describe('GET/transaction, testing for product endpoint', function () {
     describe('it should return status 200 with success all transaciton', function () {
         it('should return status 200 with value object', function (done) {
 
@@ -82,6 +82,6 @@ describe.only('GET/transaction, testing for product endpoint', function () {
         })
     })
 
-    describe()
+  
 
 })

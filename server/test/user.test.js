@@ -3,21 +3,21 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 chai.should();
 const app = require('../app')
-
+let access_token = ''
 const User = require('../models/users')
 
 chai.use(chaiHttp)
 
-before(function (done) {
-    User
-        .remove({})
-        .then(() => {
-            done()
-        })
-        .catch(err => {
-            console.log(err)
-        })
-})
+// before(function (done) {
+//     User
+//         .remove({})
+//         .then(() => {
+//             done()
+//         })
+//         .catch(err => {
+//             console.log(err)
+//         })
+// })
 
 after(function (done) {
     User
@@ -239,6 +239,7 @@ describe('user testing', function () {
                     }
                 )
                 .end(function (err, response) {
+                    access_token = response.body.access_token
                     response.should.have.status(200)
                     response.should.be.an('object')
                     response.body.should.have.property('access_token')
@@ -304,6 +305,25 @@ describe('user testing', function () {
                     response.body.error.should.equal('email or password wrong')
                     done()
                 })
+        })
+    })
+
+    describe('GET /users/cart, it should return array of user cart', function() {
+        describe('success value of get user cart', function() {
+            it('should return status 200 with array of user cart', function(done) {
+                chai
+                .request(app)
+                .get('/users/cart')
+                .set({
+                    access_token : access_token
+                })
+                .end(function (err, response) {
+                    response.should.have.status(200)
+                    response.should.be.an('object')
+                    response.body.should.have.property('cart')
+                    done()
+                })
+            })
         })
     })
 })
