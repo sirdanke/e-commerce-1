@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs10>
+  <v-flex xs8 offset-xs1>
     <v-data-table :headers="headers" :items="allTransactions" class="elevation-1">
       <template v-slot:items="props">
         <td>{{ props.item._id }}</td>

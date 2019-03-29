@@ -15,6 +15,14 @@ export default {
   components: {
     sideNav,
     productForm
+  },
+  created() {
+    this.setDefaultPage()
+  },
+  methods : {
+    setDefaultPage() {
+      this.$store.commit('setDefaultPage')
+    }
   }
 };
 </script>

@@ -12,9 +12,17 @@ export default new Vuex.Store({
     isLogin: false,
     isAdmin: false,
     userCart: [],
-    isLoading: false
+    isLoading: false,
+    quantityInBucket : 0,
+    allCities : []
   },
   mutations: {
+    addQuantity(state, payload) {
+      state.quantityInBucket = payload
+    },
+    setDefaultPage(state,payload) {
+      state.collectionPage = 'default'
+    },
     fetchData(state, payload) {
       state.allProducts = payload.reverse()
     },
@@ -43,9 +51,7 @@ export default new Vuex.Store({
       router.push('/admin')
     },
     userCart(state, payload) {
-
       state.userCart = payload
-
       router.push('/cart')
     },
     editProduct(state, payload) {
@@ -67,6 +73,9 @@ export default new Vuex.Store({
       })
       state.allProducts.splice(mYindex, 1)
       router.push('/admin')
+    },
+    fetchDeliveryCharge(state, payload) {
+      state.allCities = payload
     }
   },
 
@@ -116,6 +125,7 @@ export default new Vuex.Store({
           });
  
           commit('login', { isLogin: true, role: data.role })
+         
         })
         .catch(({ response }) => {
           Swal.fire({
@@ -197,6 +207,21 @@ export default new Vuex.Store({
           });
 
         })
-    }
+    },
+    fetchDeliveryCharge({commit}) {
+      axios 
+        .get(`transactions/city`, {
+          headers : {
+            access_token : localStorage.getItem('access_token')
+          }
+        })
+        .then(({data})=> {
+          commit('fetchDeliveryCharge', data.city)
+          // this.cities = data.city        
+        })
+        .catch(({response})=> {
+          console.log(response);         
+        })
+     },
   }
 })

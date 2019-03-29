@@ -30,7 +30,7 @@ describe('GET/transaction, testing for product endpoint', function () {
                 })
         })
     })
-    describe('POST/product with error status', function () {
+    describe('GET/Transaction with error status', function () {
 
 
         it('should return status 400 with value not authorzie', function (done) {
@@ -67,6 +67,23 @@ describe('GET/transaction, testing for product endpoint', function () {
 
 
     describe('it should return status 200 with success get user transaciton', function () {
+        it('should return status 200 with value object', function (done) {
+
+            chai
+                .request(app)
+                .get('/transactions/user')
+                .set('access_token', user_token)
+                .end(function (err, response) {
+                    response.should.have.status(200)
+                    response.should.be.an('object')
+                    response.body.should.be.an('array')
+                    done()
+                })
+        })
+    })
+
+
+    describe('it should return status 200 with succes post transaciton', function () {
         it('should return status 200 with value object', function (done) {
 
             chai

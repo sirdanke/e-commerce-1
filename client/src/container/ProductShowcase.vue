@@ -1,7 +1,7 @@
 <template>
   <v-container class="container">
     <v-layout row fill-height class="mt-5">
-      <v-flex sm2>
+      <!-- <v-flex sm2>
         <v-list class="elevation-5" v-for="brand in listBrand">
           <v-list-tile class="sidenav-button">
             <v-list-tile-action>
@@ -9,7 +9,7 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
-      </v-flex>
+      </v-flex> -->
       <router-view/>
     </v-layout>
   </v-container>

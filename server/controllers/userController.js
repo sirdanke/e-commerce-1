@@ -36,13 +36,13 @@ module.exports = {
                         .then(response => {
                             if (response) {
                                 res.status(200).json({
-                                    user: user._id,
-                                    role: user.role,
-                                    cart : user.cart,
-                                    access_token: jwt.sign({
-                                        id: user._id,
-                                        role: user.role
-                                    }, process.env.JWT_SECRET),
+                                        user: user._id,
+                                        role: user.role,
+                                        cart : user.cart,
+                                        access_token: jwt.sign({
+                                            id: user._id,
+                                            role: user.role
+                                        }, process.env.JWT_SECRET),
                                     user: user._id
                                 })
                             } else {
@@ -69,13 +69,9 @@ module.exports = {
                     .populate({path : 'cart.product'})
             })
             .then(data => {
-                console.log(data.cart);
-                
                 res.status(200).json({ cart: data.cart })
             })
             .catch(err => {
-                console.log(err, "======");
-                
                 res.status(500).json(err)
             })
     },

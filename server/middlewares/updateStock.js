@@ -8,8 +8,6 @@ function updateStock(req,res, next) {
             if(data.stock < Number(req.body.product.quantity)) {
                 res.status(400).json({message :'sorry our stock cannot match your order'})
             } else {
-                console.log(req.body.product);
-                
                 let currentStock = data.stock -= Number(req.body.product.quantity)
                 // console.log(currentStock, "===STOCK");
                 
@@ -24,8 +22,6 @@ function updateStock(req,res, next) {
             }        
         })
         .catch(err => {
-            console.log(err, "====dicupdate stock");
-            
             res.status(500).json(err)
         })
 }

@@ -21,6 +21,7 @@ export default {
   created() {
     this.fetchData();
     this.cekLogin();
+    this.fecthDeliveryCharge()
   },
   computed : {
     isLoading() {
@@ -28,6 +29,7 @@ export default {
     }
   },
   methods: {
+  
     cekLogin() {
       axios
         .post(
@@ -39,7 +41,6 @@ export default {
           this.$store.commit("login", data);
         })
         .catch(({ response }) => {
-          console.log(response);
         });
     },
     ...mapActions(["fetchData"])

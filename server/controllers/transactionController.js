@@ -60,22 +60,16 @@ module.exports = {
                     new: true
                 })
             .then(data => {
-                console.log(data, "===");
-                
                 return Transaction
                     .findById(data._id)
                     .populate('user')
                     .populate({ path: 'transactions.product' })
             })
             .then(data => {
-                console.log(data, "======ini data");
-                
                 res.status(200).json(data)
 
             })
             .catch(err => {
-                console.log(err, "====");
-                
                 res.status(500).json(err)
             })
 

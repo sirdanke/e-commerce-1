@@ -65,8 +65,6 @@ userSchema.pre('save', function (next) {
                 next(err)
             } else {
                 user.password = hash;
-                // console.log(user);
-
                 next();
             }
         })
@@ -84,7 +82,6 @@ userSchema.pre('save', function(next){
         next()
     }
 })
-// userSchema.plugin(uniqueValidator, { type: 'mongoose-unique-validator' });
 
 const User = mongoose.model('User', userSchema)
 module.exports = User
