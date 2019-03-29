@@ -25,7 +25,8 @@ module.exports = {
             data = req.body.data
         }
    
-
+        console.log(data, "=======ahjaka");
+        
         Product
             .create({
                 name: data.name,
@@ -39,11 +40,13 @@ module.exports = {
 
             })
             .then(data => {
-
+                console.log(data);
+                
                 res.status(201).json(data)
             })
             .catch(err => {
-
+                console.log(err);
+                
                 let path = Object.keys(err.errors)
                 res.status(400).json({ error: err.errors[path[0]].message })
             })
